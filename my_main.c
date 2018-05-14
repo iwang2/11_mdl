@@ -104,4 +104,15 @@ void my_main() {
   g.green = 0;
   g.blue = 0;
 
+  for ( int i = 0 ; op[i] ; i++ ) {
+    if ( op[i].opcode == PUSH ) {
+      push(systems);
+    }
+    else if ( op[i].opcode == POP ) {
+      pop(systems);
+    }
+    else if ( op[i].opcode == MOVE ) {
+    }
+  }
+
 }
