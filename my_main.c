@@ -112,18 +112,20 @@ void my_main() {
       pop(systems);
     }
     else if ( op[i].opcode == DISPLAY ) {
+      display(t);
     }
     else if ( op[i].opcode == SAVE ) {
+      save_extension(t, op[i].op.save.p->name);
     }
     else if ( op[i].opcode == SPHERE ) {
       double
 	x = op[i].op.sphere.d[0],
 	y = op[i].op.sphere.d[1],
-	z = op[].op.sphere.d[2];
+	z = op[i].op.sphere.d[2];
       double r = op[i].op.sphere.r;
       add_sphere( tmp, x, y, z, r, step_3d );
       matrix_mult( peek(systems), tmp );
-      draw_polgyons( tmp, t, zb, view, light, ambient,
+      draw_polygons( tmp, t, zb, view, light, ambient,
 		     areflect, dreflect, sreflect );
       tmp->lastcol = 0;
     }
@@ -165,7 +167,7 @@ void my_main() {
 	z1 = op[i].op.line.p1[2];
       add_edge( tmp, x0, y0, z0, x1, y1, z1 );
       matrix_mult( peek(systems), tmp );
-      draw_lines( tmp, t, zb, c );
+      draw_lines( tmp, t, zb, g );
       tmp->lastcol = 0;
     }
     else if ( op[i].opcode == MOVE ) {
