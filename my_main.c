@@ -50,7 +50,7 @@
 #include "gmath.h"
 
 void my_main() {
-
+  
   int i;
   struct matrix *tmp;
   struct stack *systems;
@@ -58,7 +58,9 @@ void my_main() {
   zbuffer zb;
   color g;
   double step_3d = 20;
-  double theta;
+  double theta, r0, r1;
+  int axis;
+  double x0, y0, z0, x1, y1, z1;
 
   //Lighting values here for easy access
   color ambient;
@@ -104,7 +106,7 @@ void my_main() {
   g.green = 0;
   g.blue = 0;
 
-  for ( int i = 0 ; op[i].opcode ; i++ ) {
+  for ( i = 0 ; op[i].opcode ; i++ ) {
     if ( op[i].opcode == PUSH ) {
       push(systems);
     }
@@ -118,39 +120,35 @@ void my_main() {
       save_extension(t, op[i].op.save.p->name);
     }
     else if ( op[i].opcode == SPHERE ) {
-      double
-	x = op[i].op.sphere.d[0],
-	y = op[i].op.sphere.d[1],
-	z = op[i].op.sphere.d[2];
-      double r = op[i].op.sphere.r;
-      add_sphere( tmp, x, y, z, r, step_3d );
+      x0 = op[i].op.sphere.d[0];
+      y0 = op[i].op.sphere.d[1];
+      z0 = op[i].op.sphere.d[2];
+      r0 = op[i].op.sphere.r;
+      add_sphere( tmp, x0, y0, z0, r0, step_3d );
       matrix_mult( peek(systems), tmp );
       draw_polygons( tmp, t, zb, view, light, ambient,
 		     areflect, dreflect, sreflect );
       tmp->lastcol = 0;
     }
     else if ( op[i].opcode == TORUS ) {
-      double
-	x = op[i].op.torus.d[0],
-	y = op[i].op.torus.d[1],
-	z = op[i].op.torus.d[2];
-      double
-	r0 = op[i].op.torus.r0,
-	r1 = op[i].op.torus.r1;
-      add_torus( tmp, x, y, z, r0, r1, step_3d );
+      x0 = op[i].op.torus.d[0];
+      y0 = op[i].op.torus.d[1];
+      z0 = op[i].op.torus.d[2];
+      r0 = op[i].op.torus.r0;
+      r1 = op[i].op.torus.r1;
+      add_torus( tmp, x0, y0, z0, r0, r1, step_3d );
       matrix_mult( peek(systems), tmp );
       draw_polygons( tmp, t, zb, view, light, ambient,
 		     areflect, dreflect, sreflect );
       tmp->lastcol = 0;
     }
     else if ( op[i].opcode == BOX ) {
-      double
-	x0 = op[i].op.box.d0[0],
-	y0 = op[i].op.box.d0[1],
-	z0 = op[i].op.box.d0[2],
-	x1 = op[i].op.box.d1[0],
-	y1 = op[i].op.box.d1[1],
-	z1 = op[i].op.box.d1[2];
+      x0 = op[i].op.box.d0[0];
+      y0 = op[i].op.box.d0[1];
+      z0 = op[i].op.box.d0[2];
+      x1 = op[i].op.box.d1[0];
+      y1 = op[i].op.box.d1[1];
+      z1 = op[i].op.box.d1[2];
       add_box( tmp, x0, y0, z0, x1, y1, z1 );
       matrix_mult( peek(systems), tmp );
       draw_polygons( tmp, t, zb, view, light, ambient,
@@ -158,39 +156,36 @@ void my_main() {
       tmp->lastcol = 0;
     }
     else if ( op[i].opcode == LINE ) {
-      double
-	x0 = op[i].op.line.p0[0],
-	y0 = op[i].op.line.p0[1],
-	z0 = op[i].op.line.p0[2],
-	x1 = op[i].op.line.p1[0],
-	y1 = op[i].op.line.p1[1],
-	z1 = op[i].op.line.p1[2];
+      x0 = op[i].op.line.p0[0];
+      y0 = op[i].op.line.p0[1];
+      z0 = op[i].op.line.p0[2];
+      x1 = op[i].op.line.p1[0];
+      y1 = op[i].op.line.p1[1];
+      z1 = op[i].op.line.p1[2];
       add_edge( tmp, x0, y0, z0, x1, y1, z1 );
       matrix_mult( peek(systems), tmp );
       draw_lines( tmp, t, zb, g );
       tmp->lastcol = 0;
     }
     else if ( op[i].opcode == MOVE ) {
-      double
-	x = op[i].op.move.d[0],
-	y = op[i].op.move.d[1],
-	z = op[i].op.move.d[2];
-      tmp = make_translate( x, y, z );
+      x0 = op[i].op.move.d[0];
+      y0 = op[i].op.move.d[1];
+      z0 = op[i].op.move.d[2];
+      tmp = make_translate( x0, y0, z0 );
       matrix_mult( peek(systems), tmp );
       copy_matrix( tmp, peek(systems) );
     }
     else if ( op[i].opcode == SCALE ) {
-      double
-	x = op[i].op.scale.d[0],
-	y = op[i].op.scale.d[1],
-	z = op[i].op.scale.d[2];
-      tmp = make_scale( x, y, z );
+      x0 = op[i].op.scale.d[0];
+      y0 = op[i].op.scale.d[1];
+      z0 = op[i].op.scale.d[2];
+      tmp = make_scale( x0, y0, z0 );
       matrix_mult( peek(systems), tmp );
       copy_matrix( tmp, peek(systems) );
     }
     else if ( op[i].opcode == ROTATE ) {
-      double theta = op[i].op.rotate.degrees;
-      int axis = op[i].op.rotate.axis;
+      theta = op[i].op.rotate.degrees;
+      axis = op[i].op.rotate.axis;
       theta *= M_PI / 180;
       if ( axis == 0 ) tmp = make_rotX( theta );
       else if ( axis == 1 ) tmp = make_rotY( theta );
