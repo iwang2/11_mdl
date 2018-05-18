@@ -58,8 +58,7 @@ void my_main() {
   zbuffer zb;
   color g;
   double step_3d = 20;
-  double theta, r0, r1;
-  int axis;
+  double theta, r0, r1, axis;
   double x0, y0, z0, x1, y1, z1;
 
   //Lighting values here for easy access
@@ -106,7 +105,7 @@ void my_main() {
   g.green = 0;
   g.blue = 0;
 
-  for ( i = 0 ; op[i].opcode ; i++ ) {
+  for ( i = 0 ; i < lastop ; i++ ) {
     if ( op[i].opcode == PUSH ) {
       push(systems);
     }
@@ -174,6 +173,7 @@ void my_main() {
       tmp = make_translate( x0, y0, z0 );
       matrix_mult( peek(systems), tmp );
       copy_matrix( tmp, peek(systems) );
+      tmp->lastcol = 0;
     }
     else if ( op[i].opcode == SCALE ) {
       x0 = op[i].op.scale.d[0];
@@ -182,6 +182,7 @@ void my_main() {
       tmp = make_scale( x0, y0, z0 );
       matrix_mult( peek(systems), tmp );
       copy_matrix( tmp, peek(systems) );
+      tmp->lastcol = 0;
     }
     else if ( op[i].opcode == ROTATE ) {
       theta = op[i].op.rotate.degrees;
@@ -192,6 +193,7 @@ void my_main() {
       else tmp = make_rotZ( theta );
       matrix_mult( peek(systems), tmp );
       copy_matrix( tmp, peek(systems) );
+      tmp->lastcol = 0;
     }
   }
 
