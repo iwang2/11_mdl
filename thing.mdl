@@ -1,0 +1,18 @@
+push
+move 160 300 0
+rotate x 30
+rotate y -40
+box 0 0 0 100 250 100
+push
+rotate z -45
+move 0 68 0
+box 0 0 0 5 70 100
+push
+rotate z 90
+box 0 0 0 5 70 100
+push
+move 7 0 0
+rotate z 135
+box 0 0 0 4 15 100
+display
+save thing.png

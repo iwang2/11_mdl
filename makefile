@@ -6,6 +6,9 @@ CC= gcc
 run: all
 	./mdl robot.mdl
 
+thing: all
+	./mdl thing.mdl
+
 all: parser
 
 parser: lex.yy.c y.tab.c y.tab.h $(OBJECTS)
